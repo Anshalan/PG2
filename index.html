@@ -20,32 +20,41 @@
     ctx1.closePath();
 
 
-    function changeColor1() {
-        if (isBlue) {
-            green = 255;
-            blue = 0;
-            isBlue = false;
-        } else {
-            green = 0;
-            blue = 255;
-            isBlue = true;
-        }
-        ctx1.fillStyle = 'rgb(0, ' + green + ',' + blue+ ')';
-        ctx1.fill();
-    }
-    setInterval(changeColor1, 1000);
-
-
     // function changeColor1() {
     //     if (isBlue) {
-    //         ctx1.fillStyle = "#00FF00";
+    //         // green = 255;
+    //         // blue = 0;
+    //         setInterval(changeColorGrad, 1000/255);
     //         isBlue = false;
     //     } else {
-    //         ctx1.fillStyle = "#0000FF";
+    //         // green = 0;
+    //         // blue = 255;
+    //         setInterval(changeColorGrad, 1000/255);
     //         isBlue = true;
     //     }
-    //     ctx1.fill();
     // }
+
+    function changeColorGrad() {
+        if (isBlue) {
+            green++;
+            blue--;
+        }else{
+            blue++;
+            green--;
+        }
+        ctx1.fillStyle = setFillStyle();
+        ctx1.fill()
+        if(blue === 0 || green === 0){
+            isBlue =! isBlue;
+        }
+    }
+
+    function setFillStyle() {
+        return 'rgb(0, ' + green + ',' + blue + ')';
+    }
+
+
+    setInterval(changeColorGrad, 1000/255);
 
 </script>
 </body>
