@@ -1,11 +1,22 @@
 <html>
 <head>
-  <title>Title of the document</title>
+  <title>PG2_lab1_1</title>
 </head>
 
 <body>
   <h1>This is a heading</h1>
   <p>This is a paragraph.</p>
+
+  <canvas id="myCanvas">
+    Your browser does not support the canvas tag.
+  </canvas>
+
+  <script>
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#FF0000";
+    ctx.fillRect(0, 0, 80, 80);
+  </script>
 </body>
 
 </html>
