@@ -1,22 +1,35 @@
 <html>
 <head>
-  <title>PG2_lab1_1</title>
+    <title>PG2_lab1_1</title>
 </head>
 
 <body>
 
-  <canvas id="myCanvas" width="800" height="600">
+<canvas id="myCanvas" width="800" height="600">
     Your browser does not support the canvas tag.
-  </canvas>
+</canvas>
 
-  <script>
+<script>
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
-    ctx.fillStyle = "#FF0000";
+    var isBlue = false;
     ctx.beginPath();
     ctx.arc(400, 300, 300, 0, 360);
-    ctx.fill();
-  </script>
+
+    function changeColor() {
+        if (isBlue) {
+            ctx.fillStyle = "#00FF00";
+            isBlue = false;
+        } else {
+            ctx.fillStyle = "#0000FF";
+            isBlue = true;
+        }
+        ctx.fill();
+    }
+    setInterval(changeColor, 1000);
+
+
+</script>
 </body>
 
 </html>
