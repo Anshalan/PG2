@@ -14,8 +14,9 @@
     var canvas = document.getElementById("myCanvas");
     var ctx1 = canvas.getContext("2d");
     var isBlue = false;
+    var additionalHeight = 0;
     ctx1.beginPath();
-    ctx1.arc(100, 300, 100, 0, 360);
+    ctx1.arc(100, 300, 50, 0, 360);
     ctx1.fillStyle = 'blue';
     ctx1.closePath();
 
@@ -48,13 +49,29 @@
             isBlue =! isBlue;
         }
     }
+    function changeLocation(){
+        if (isBlue) {
+            additionalHeight++
+        }else{
+            additionalHeight--
+        }
+        ctx1.clearRect(0, 0, canvas.width, canvas.height);
+        ctx1.beginPath();
+        ctx1.arc(100, 300 + additionalHeight, 50, 0, 360);
+        ctx1.closePath();
+
+    }
 
     function setFillStyle() {
         return 'rgb(0, ' + green + ',' + blue + ')';
     }
+    function ChangeLocationAndColor(){
+        changeLocation()
+        changeColorGrad()
+    }
 
 
-    setInterval(changeColorGrad, 1000/255);
+    setInterval(ChangeLocationAndColor, 1000/255);
 
 </script>
 </body>
