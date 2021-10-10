@@ -15,25 +15,6 @@
     var ctx1 = canvas.getContext("2d");
     var isBlue = false;
     var additionalHeight = 0;
-    ctx1.beginPath();
-    ctx1.arc(100, 300, 50, 0, 360);
-    ctx1.fillStyle = 'blue';
-    ctx1.closePath();
-
-
-    // function changeColor1() {
-    //     if (isBlue) {
-    //         // green = 255;
-    //         // blue = 0;
-    //         setInterval(changeColorGrad, 1000/255);
-    //         isBlue = false;
-    //     } else {
-    //         // green = 0;
-    //         // blue = 255;
-    //         setInterval(changeColorGrad, 1000/255);
-    //         isBlue = true;
-    //     }
-    // }
 
     function changeColorGrad() {
         if (isBlue) {
@@ -59,7 +40,6 @@
         ctx1.beginPath();
         ctx1.arc(100, 300 + additionalHeight, 50, 0, 360);
         ctx1.closePath();
-
     }
 
     function setFillStyle() {
@@ -69,7 +49,6 @@
         changeLocation()
         changeColorGrad()
     }
-
 
     setInterval(ChangeLocationAndColor, 1000/255);
 
