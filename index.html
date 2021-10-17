@@ -82,25 +82,11 @@
             ctx1.fill();
         }
 
-        moveUp(ball) {
+        moveUp() {
             this.clear();
             this.currentY -= 10;
             this.draw();
-            var hit = opponentList.findIndex(checkCollision);
-            //
-            function checkCollision(element,index,array){
 
-                var distance = Math.sqrt(Math.pow(element.currentX - ball.currentX,2) + Math.pow(element.currentY - ball.currentY,2))
-                var maxAllowedDistance = ball.radius + element.radius;
-                if (distance <= maxAllowedDistance){
-                    return true;
-                }
-            }
-            if (hit >=0){
-                opponentList[hit].clear()
-                opponentList.splice(hit,1);
-                this.clear()
-            }
         }
 
     }
@@ -152,6 +138,23 @@
 
         function moveBullet() {
             bullet.moveUp(bullet);
+            var hit = opponentList.findIndex(checkCollision);
+            //
+            function checkCollision(element,index,array){
+
+                var distance = Math.sqrt(Math.pow(element.currentX - bullet.currentX,2) + Math.pow(element.currentY - bullet.currentY,2))
+                var maxAllowedDistance = bullet.radius + element.radius;
+                if (distance <= maxAllowedDistance){
+                    return true;
+                }
+            }
+            if (hit >=0){
+                opponentList[hit].clear()
+                opponentList.splice(hit,1);
+                bullet.clear()
+                clearInterval(bulletHandle);
+            }
+
             if (bullet.currentX < 10) {
                 clearInterval(bulletHandle);
             }
