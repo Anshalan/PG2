@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>PG2_lab1_1</title>
+    <title>PG2_lab1_2</title>
 </head>
 
 <body>
@@ -9,49 +9,6 @@
 </canvas>
 
 <script>
-    var green = 255;
-    var blue = 0;
-    var canvas = document.getElementById("myCanvas");
-    var ctx1 = canvas.getContext("2d");
-    var isBlue = false;
-    var additionalHeight = 0;
-
-    function changeColorGrad() {
-        if (isBlue) {
-            green++;
-            blue--;
-        }else{
-            blue++;
-            green--;
-        }
-        ctx1.fillStyle = setFillStyle();
-        ctx1.fill()
-        if(blue === 0 || green === 0){
-            isBlue =! isBlue;
-        }
-    }
-    function changeLocation(){
-        if (isBlue) {
-            additionalHeight++
-        }else{
-            additionalHeight--
-        }
-        ctx1.clearRect(0, 0, canvas.width, canvas.height);
-        ctx1.beginPath();
-        ctx1.arc(100, 300 + additionalHeight, 50, 0, 360);
-        ctx1.closePath();
-    }
-
-    function setFillStyle() {
-        return 'rgb(0, ' + green + ',' + blue + ')';
-    }
-    function ChangeLocationAndColor(){
-        changeLocation()
-        changeColorGrad()
-    }
-
-    setInterval(ChangeLocationAndColor, 1000/255);
-
 </script>
 </body>
 
