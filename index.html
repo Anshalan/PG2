@@ -33,7 +33,7 @@
             if (fBallPosition >10){
             fBallPosition -= 10}
         } else if (s === "right") {
-            if (fBallPosition <canvas.width - 10){
+            if (fBallPosition <(canvas.width - 10)){
                 fBallPosition += 10}
         }
         ctx1.clearRect(0, 0, canvas.width, canvas.height);
@@ -53,7 +53,7 @@
     function handleKeyPress(e) {
         if (e.keyCode === 37) {
             move("left")
-        } else if (e.keyCode === 37) {
+        } else if (e.keyCode === 39) {
             move("right")
         }
 
