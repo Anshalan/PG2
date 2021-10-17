@@ -15,6 +15,7 @@
     var bulletY = -10;
     var bulletX = -10;
     var bulletHandle;
+    var opponentHandle;
     var playerBox;
     var opponentList = [];
 
@@ -127,9 +128,10 @@
     }
 
     init();
-    opponents();
-    opponents();
-    opponents();
+    opponentHandle = setInterval(opponents,2500);
+    // opponents();
+    // opponents();
+    // opponents();
 
     function fire() {
         // clearInterval(bulletHandle);
@@ -179,6 +181,9 @@
         function moveOpponents(item) {
             item.currentY +=40;
             item.draw();
+            if (item.currentY >= 14*40){
+                clearInterval(opponentHandle);
+            }
         }
     }
 
