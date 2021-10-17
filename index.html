@@ -13,18 +13,19 @@
 
     var canvas = document.getElementById("myCanvas");
     var ctx1 = canvas.getContext("2d");
-    var fBallPosition = canvas.width / 2;
+    var rectPositionX = canvas.width / 2 - 20;
+    var rectPositionY = canvas.height - 20;
     var bulletY = -10;
     var bulletX = -10;
-    var objects = new Array();
+    // var objects = new Array();
 
     init();
 
     function fire() {
-        bulletY = fBallPosition
-        bulletX = canvas.height - 40
+        bulletY = rectPositionY-15
+        bulletX = rectPositionX + 40/2
         ctx1.beginPath();
-        ctx1.arc(bulletY, bulletX, 10, 0, 360);
+        ctx1.arc(bulletX, bulletY, 10, 0, 360);
         ctx1.closePath();
 
         ctx1.fillStyle = 'red';
@@ -33,20 +34,21 @@
 
 
     function move(s) {
+        ctx1.clearRect(rectPositionX-1, rectPositionY-1, 40+2, 20+2);
         if (s === "left") {
-            if (fBallPosition > 10) {
-                fBallPosition -= 10
+            if (rectPositionX > 0) {
+                rectPositionX -= 10
             }
         } else if (s === "right") {
-            if (fBallPosition < (canvas.width - 10)) {
-                fBallPosition += 10
+            if (rectPositionX < (canvas.width - 40)) {
+                rectPositionX += 10
             }
         }
-        ctx1.clearRect(0, 0, canvas.width, canvas.height);
-        ctx1.beginPath();
-        ctx1.arc(fBallPosition, canvas.height - 20, 10, 0, 360);
-        ctx1.closePath();
 
+        ctx1.beginPath()
+        ctx1.rect(rectPositionX, rectPositionY, 40, 20)
+        ctx1.stroke()
+        ctx1.closePath()
         ctx1.fillStyle = 'green';
         ctx1.fill();
     }
@@ -54,12 +56,15 @@
     function init() {
         window.addEventListener('keydown', handleKeyPress, true);
 
-        ctx1.clearRect(0, 0, canvas.width, canvas.height);
-        ctx1.beginPath();
-        ctx1.arc(fBallPosition, canvas.height - 20, 10, 0, 360);
-        ctx1.closePath();
+        // ctx1.clearRect(0, 0, canvas.width, canvas.height);
+        // ctx1.rect(rectPositionX, rectPositionY, 40, 20);
+        // ctx1.stroke();
+        ctx1.beginPath()
+        ctx1.rect(rectPositionX, rectPositionY, 40, 20)
+        ctx1.stroke()
+        ctx1.closePath()
+        ctx1.fillStyle = "green";
 
-        ctx1.fillStyle = 'green';
         ctx1.fill();
     }
 
@@ -68,7 +73,8 @@
             move("left")
         } else if (e.keyCode === 39) {
             move("right")
-        }else if(e.keyCode === 32){
+        }
+            else if(e.keyCode === 32){
             fire()
         }
     }
