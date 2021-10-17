@@ -8,7 +8,18 @@
     Your browser does not support the canvas tag.
 </canvas>
 
+
 <script>
+    var canvas = document.getElementById("myCanvas");
+    var ctx1 = canvas.getContext("2d");
+
+    ctx1.clearRect(0, 0, canvas.width, canvas.height);
+    ctx1.beginPath();
+    ctx1.arc(canvas.width/2, 20 , 10, 0, 360);
+    ctx1.closePath();
+
+    ctx1.fillStyle = 'red';
+    ctx1.fill()
 </script>
 </body>
 
