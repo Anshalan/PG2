@@ -16,6 +16,7 @@
     var bulletX = -10;
     var bulletHandle;
     var playerBox;
+    var opponentList = [];
 
     class PlayerBox {
         width;
@@ -127,6 +128,8 @@
 
     init();
     opponents();
+    opponents();
+    opponents();
 
     function fire() {
         // clearInterval(bulletHandle);
@@ -168,12 +171,17 @@
     }
 
     function opponents() {
-        for (let j = 1; j < 5; j++) {
-            for (let i = 1; i < 20; i++) {
-                var opponent = new Opponent(40*i, 40 *j);
-            }
+        opponentList.forEach(moveOpponents);
+        for (let i = 1; i < 20; i++) {
+            var opponent = new Opponent(40 * i, 40);
+            opponentList.push(opponent);
+        }
+        function moveOpponents(item) {
+            item.currentY +=40;
+            item.draw();
         }
     }
+
     //
     // function drawOpponent(X, Y) {
     //     ctx1.beginPath();
