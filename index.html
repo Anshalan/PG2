@@ -7,17 +7,19 @@
 <canvas id="myCanvas" width="800" height="600">
     Your browser does not support the canvas tag.
 </canvas>
+<h1 id = "popup"></h1>
 
 
 <script>
     var canvas = document.getElementById("myCanvas");
     var ctx1 = canvas.getContext("2d");
-    var bulletY = -10;
-    var bulletX = -10;
+    // var bulletY = -10;
+    // var bulletX = -10;
     var bulletHandle;
     var opponentHandle;
     var playerBox;
     var opponentList = [];
+    var points = 0;
 
     class PlayerBox {
         width;
@@ -29,7 +31,7 @@
             this.height = h;
             this.width = w;
             this.currentX = canvas.width / 2 - 20;
-            this.currentY = canvas.height - 20;
+            this.currentY = canvas.height - 60;
             this.draw();
         }
 
@@ -88,7 +90,6 @@
             this.draw();
 
         }
-
     }
 
     class Opponent {
@@ -129,37 +130,39 @@
     }
 
     init();
-    opponentHandle = setInterval(opponents, 2500);
+    setInterval()
+    opponentHandle = setInterval(opponents, 3000);
 
     function fire() {
-        // clearInterval(bulletHandle);
         var bullet = new Bullet(playerBox.currentX, playerBox.currentY);
         var bulletHandle = setInterval(moveBullet, 10)
 
         function moveBullet() {
             bullet.moveUp(bullet);
             var hit = opponentList.findIndex(checkCollision);
-            //
-            function checkCollision(element,index,array){
 
-                var distance = Math.sqrt(Math.pow(element.currentX - bullet.currentX,2) + Math.pow(element.currentY - bullet.currentY,2))
+            if (bullet.currentX < 100) {
+                bullet.clear();
+                bullet = null;
+                clearInterval(bulletHandle);
+            }
+            function checkCollision(element) {
+
+                var distance = Math.sqrt(Math.pow(element.currentX - bullet.currentX, 2) + Math.pow(element.currentY - bullet.currentY, 2))
                 var maxAllowedDistance = bullet.radius + element.radius;
-                if (distance <= maxAllowedDistance){
+                if (distance <= maxAllowedDistance) {
                     return true;
                 }
             }
-            if (hit >=0){
-                opponentList[hit].clear()
-                opponentList.splice(hit,1);
-                bullet.clear()
-                clearInterval(bulletHandle);
-            }
 
-            if (bullet.currentX < 10) {
+            if (hit >= 0) {
+                opponentList[hit].clear()
+                opponentList.splice(hit, 1);
+                bullet.clear();
+                bullet = null;
                 clearInterval(bulletHandle);
             }
         }
-
     }
 
 
@@ -190,31 +193,23 @@
     function opponents() {
         opponentList.forEach(moveOpponents);
         for (let i = 1; i < 20; i++) {
-            var opponent = new Opponent(40 * i, 40);
+            var opponent = new Opponent(40 * i, 80);
             opponentList.push(opponent);
         }
 
         function moveOpponents(item) {
             item.currentY += 40;
             item.draw();
-            if (item.currentY >= 14 * 40) {
+            if (item.currentY >= 13 * 40) {
                 clearInterval(opponentHandle);
-                //Gameover
+
+                ctx1.font = "50px Arial";
+                ctx1.fillStyle = "red";
+                ctx1.fillText("GAMEOVER", canvas.width/2, canvas.height/2);
+
             }
         }
     }
-
-    //
-    // function drawOpponent(X, Y) {
-    //     ctx1.beginPath();
-    //     ctx1.arc(X, Y, 20, 0, 360);
-    //     ctx1.closePath();
-    //     ctx1.fillStyle = 'red';
-    //     ctx1.fill();
-    // }
-
-    // function redraw()
-
 
 </script>
 
