@@ -10,87 +10,151 @@
 
 
 <script>
-
     var canvas = document.getElementById("myCanvas");
     var ctx1 = canvas.getContext("2d");
-    var rectPositionX = canvas.width / 2 - 20;
-    var rectPositionY = canvas.height - 20;
     var bulletY = -10;
     var bulletX = -10;
-    var bulletHandle
-    // var objects = new Array();
+    var bulletHandle;
+    var playerBox;
 
-    init();
+    class PlayerBox {
+        width;
+        height;
+        currentX;
+        currentY;
 
-    function fire() {
-        clearInterval(bulletHandle);
-        clearBullet()
-        bulletY = rectPositionY - 20
-        bulletX = rectPositionX + 40 / 2
-        ctx1.beginPath();
-        ctx1.arc(bulletX, bulletY, 10, 0, 360);
-        ctx1.closePath();
+        constructor(h, w) {
+            this.height = h;
+            this.width = w;
+            this.currentX = canvas.width / 2 - 20;
+            this.currentY = canvas.height - 20;
+            this.draw();
+        }
 
-        ctx1.fillStyle = 'red';
-        ctx1.fill();
-
-        bulletHandle = setInterval(moveBullet,10)
-        function moveBullet(){
-            clearBullet();
-            bulletY -= 10
-
-            if(bulletY <10){
-                clearBullet()
-                clearInterval(bulletHandle);
-            }
+        draw() {
+            this.clear();
             ctx1.beginPath();
-            ctx1.arc(bulletX, bulletY, 10, 0, 360);
+            ctx1.rect(this.currentX, this.currentY, 40, 20);
+            ctx1.stroke();
             ctx1.closePath();
-            ctx1.fillStyle = 'red';
+            ctx1.fillStyle = "green";
             ctx1.fill();
         }
-        function clearBullet(){
+
+        clear() {
+            ctx1.clearRect(this.currentX - 1, this.currentY - 1, this.width + 2, this.height + 2)
+        }
+
+        setCurrentX(x) {
+            this.currentX += x;
+        }
+    }
+
+    class Bullet {
+        currentX;
+        currentY;
+        radius;
+
+        constructor(boxX, boxY) {
+            this.radius = 10
+            this.currentX = boxX + 20;
+            this.currentY = boxY - 15;
+            this.draw();
+        }
+
+        draw() {
+            this.clear();
             ctx1.beginPath();
-            ctx1.arc(bulletX, bulletY, 11, 0, 360);
+            ctx1.arc(this.currentX, this.currentY, this.radius, 0, 360);
+            ctx1.stroke();
+            ctx1.closePath();
+            ctx1.fillStyle = "red";
+            ctx1.fill();
+        }
+
+        clear() {
+            ctx1.beginPath();
+            ctx1.arc(this.currentX, this.currentY, this.radius + 2, 0, 360);
             ctx1.closePath();
             ctx1.fillStyle = 'white';
             ctx1.fill();
         }
-        // function killBullet(){
-        //     clearInterval(bulletHandle)
-        // }
-    }
 
-
-
-    function move(s) {
-        ctx1.clearRect(rectPositionX - 1, rectPositionY - 1, 40 + 2, 20 + 2);
-        if (s === "left") {
-            if (rectPositionX >= 40) {
-                rectPositionX -= 40
-            }
-        } else if (s === "right") {
-            if (rectPositionX <= (canvas.width - 80)) {
-                rectPositionX += 40
-            }
+        moveUp() {
+            this.clear();
+            this.currentY -= 10;
+            this.draw();
         }
 
-        ctx1.beginPath()
-        ctx1.rect(rectPositionX, rectPositionY, 40, 20)
-        ctx1.stroke()
-        ctx1.closePath()
-        ctx1.fillStyle = 'green';
-        ctx1.fill();
+    }
+
+    class Opponent {
+        currentX;
+        currentY;
+        radius;
+
+        constructor(X, Y) {
+            this.radius = 18;
+            this.currentX = X;
+            this.currentY = Y;
+            this.draw();
+        }
+
+        draw() {
+            this.clear(); //???
+            ctx1.beginPath();
+            ctx1.arc(this.currentX, this.currentY, this.radius, 0, 360);
+            ctx1.stroke();
+            ctx1.closePath();
+            ctx1.fillStyle = "orange";
+            ctx1.fill();
+        }
+
+        clear() {
+            ctx1.beginPath();
+            ctx1.arc(this.currentX, this.currentY, this.radius + 2, 0, 360);
+            ctx1.closePath();
+            ctx1.fillStyle = 'white';
+            ctx1.fill();
+        }
     }
 
     function init() {
         window.addEventListener('keydown', handleKeyPress, true);
-        ctx1.beginPath()
-        ctx1.rect(rectPositionX, rectPositionY, 40, 20)
-        ctx1.stroke()
-        ctx1.closePath()
-        ctx1.fillStyle = "green";
-        ctx1.fill();
+        playerBox = new PlayerBox(20, 40);
+        playerBox.draw();
+    }
+
+    init();
+    opponents();
+
+    function fire() {
+        // clearInterval(bulletHandle);
+        var bullet = new Bullet(playerBox.currentX, playerBox.currentY);
+        var bulletHandle = setInterval(moveBullet, 10)
+
+        function moveBullet() {
+            bullet.moveUp();
+            if (bullet.currentX < 10) {
+                clearInterval(bulletHandle);
+            }
+        }
+
+    }
+
+
+    function move(s) {
+        playerBox.clear();
+        if (s === "left") {
+            if (playerBox.currentX >= 40) {
+                playerBox.setCurrentX(-40)
+            }
+        } else if (s === "right") {
+            if (playerBox.currentX <= (canvas.width - 80)) {
+                playerBox.setCurrentX(40)
+            }
+        }
+        playerBox.draw();
     }
 
     function handleKeyPress(e) {
@@ -102,6 +166,22 @@
             fire()
         }
     }
+
+    function opponents() {
+        for (let j = 1; j < 5; j++) {
+            for (let i = 1; i < 20; i++) {
+                var opponent = new Opponent(40*i, 40 *j);
+            }
+        }
+    }
+    //
+    // function drawOpponent(X, Y) {
+    //     ctx1.beginPath();
+    //     ctx1.arc(X, Y, 20, 0, 360);
+    //     ctx1.closePath();
+    //     ctx1.fillStyle = 'red';
+    //     ctx1.fill();
+    // }
 
     // function redraw()
 
