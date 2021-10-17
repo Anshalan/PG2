@@ -17,12 +17,15 @@
     var rectPositionY = canvas.height - 20;
     var bulletY = -10;
     var bulletX = -10;
+    var bulletHandle
     // var objects = new Array();
 
     init();
 
     function fire() {
-        bulletY = rectPositionY - 15
+        clearInterval(bulletHandle);
+        clearBullet()
+        bulletY = rectPositionY - 20
         bulletX = rectPositionX + 40 / 2
         ctx1.beginPath();
         ctx1.arc(bulletX, bulletY, 10, 0, 360);
@@ -31,23 +34,26 @@
         ctx1.fillStyle = 'red';
         ctx1.fill();
 
-        var bulletHandle = setInterval(moveBullet,10)
+        bulletHandle = setInterval(moveBullet,10)
         function moveBullet(){
-            ctx1.beginPath();
-            ctx1.arc(bulletX, bulletY, 101, 0, 360);
-            ctx1.closePath();
-            ctx1.fillStyle = 'white';
-            ctx1.fill();
+            clearBullet();
             bulletY -= 10
-            // bulletX
 
             if(bulletY <10){
+                clearBullet()
                 clearInterval(bulletHandle);
             }
             ctx1.beginPath();
             ctx1.arc(bulletX, bulletY, 10, 0, 360);
             ctx1.closePath();
             ctx1.fillStyle = 'red';
+            ctx1.fill();
+        }
+        function clearBullet(){
+            ctx1.beginPath();
+            ctx1.arc(bulletX, bulletY, 11, 0, 360);
+            ctx1.closePath();
+            ctx1.fillStyle = 'white';
             ctx1.fill();
         }
         // function killBullet(){
