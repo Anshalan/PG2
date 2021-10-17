@@ -10,17 +10,48 @@
 
 
 <script>
+    var fBallPosition = canvas.width / 2;
     var canvas = document.getElementById("myCanvas");
     var ctx1 = canvas.getContext("2d");
 
     ctx1.clearRect(0, 0, canvas.width, canvas.height);
     ctx1.beginPath();
-    ctx1.arc(canvas.width/2, canvas.height-20 , 10, 0, 360);
+    ctx1.arc(canvas.width / 2, canvas.height - 20, 10, 0, 360);
     ctx1.closePath();
 
     ctx1.fillStyle = 'red';
-    ctx1.fill()
+    ctx1.fill();
+    init();
+
+    function fire() {
+        return 'rgb(0, ' + green + ',' + blue + ')';
+    }
+
+    function move(s) {
+        if (s === "left") {
+            if (fBallPosition >10){
+            fBallPosition -= 10}
+        } else if (s === "right") {
+            if (fBallPosition <canvas.width - 10){
+                fBallPosition += 10}
+        }
+    }
+
+    function init() {
+        canvas.addEventListener('keypress', handleKeyPress);
+    }
+
+    function handleKeyPress(e) {
+        if (e.keyCode === 37) {
+            move("left")
+        } else if (e.keyCode === 37) {
+            move("right")
+        }
+    }
+
+
 </script>
+
 </body>
 
 </html>
