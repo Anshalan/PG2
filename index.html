@@ -20,6 +20,7 @@
     var playerBox;
     var opponentList = [];
     var points = 0;
+    var keyListener;
 
     class PlayerBox {
         width;
@@ -124,7 +125,7 @@
     }
 
     function init() {
-        window.addEventListener('keydown', handleKeyPress, true);
+        keyListener = window.addEventListener('keydown', handleKeyPress, true);
         playerBox = new PlayerBox(20, 40);
         playerBox.draw();
     }
@@ -151,6 +152,7 @@
                 var distance = Math.sqrt(Math.pow(element.currentX - bullet.currentX, 2) + Math.pow(element.currentY - bullet.currentY, 2))
                 var maxAllowedDistance = bullet.radius + element.radius;
                 if (distance <= maxAllowedDistance) {
+
                     return true;
                 }
             }
@@ -201,11 +203,14 @@
             item.currentY += 40;
             item.draw();
             if (item.currentY >= 13 * 40) {
+                ctx1.clearRect(0,0,canvas.width, canvas.height)
                 clearInterval(opponentHandle);
-
-                ctx1.font = "50px Arial";
-                ctx1.fillStyle = "red";
-                ctx1.fillText("GAMEOVER", canvas.width/2, canvas.height/2);
+                // keyListener = null;
+                // ctx1.font = "50px Arial";
+                // ctx1.fillStyle = "red";
+                // ctx1.textAlign = "center";
+                //
+                // ctx1.fillText("GAMEOVER", canvas.width/2, canvas.height/2);
 
             }
         }
