@@ -66,12 +66,12 @@
     function move(s) {
         ctx1.clearRect(rectPositionX - 1, rectPositionY - 1, 40 + 2, 20 + 2);
         if (s === "left") {
-            if (rectPositionX > 0) {
-                rectPositionX -= 10
+            if (rectPositionX >= 40) {
+                rectPositionX -= 40
             }
         } else if (s === "right") {
-            if (rectPositionX < (canvas.width - 40)) {
-                rectPositionX += 10
+            if (rectPositionX <= (canvas.width - 80)) {
+                rectPositionX += 40
             }
         }
 
