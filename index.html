@@ -14,27 +14,33 @@
     var canvas = document.getElementById("myCanvas");
     var ctx1 = canvas.getContext("2d");
     var fBallPosition = canvas.width / 2;
+    var bulletY = -10;
+    var bulletX = -10;
+    var objects = new Array();
 
-    ctx1.clearRect(0, 0, canvas.width, canvas.height);
-    ctx1.beginPath();
-    ctx1.arc(fBallPosition, canvas.height - 20, 10, 0, 360);
-    ctx1.closePath();
-
-    ctx1.fillStyle = 'red';
-    ctx1.fill();
     init();
 
-    // function fire() {
-    //     return 'rgb(0, ' + green + ',' + blue + ')';
-    // }
+    function fire() {
+        bulletY = fBallPosition
+        bulletX = canvas.height - 40
+        ctx1.beginPath();
+        ctx1.arc(bulletY, bulletX, 10, 0, 360);
+        ctx1.closePath();
+
+        ctx1.fillStyle = 'red';
+        ctx1.fill();
+    }
+
 
     function move(s) {
         if (s === "left") {
-            if (fBallPosition >10){
-            fBallPosition -= 10}
+            if (fBallPosition > 10) {
+                fBallPosition -= 10
+            }
         } else if (s === "right") {
-            if (fBallPosition <(canvas.width - 10)){
-                fBallPosition += 10}
+            if (fBallPosition < (canvas.width - 10)) {
+                fBallPosition += 10
+            }
         }
         ctx1.clearRect(0, 0, canvas.width, canvas.height);
         ctx1.beginPath();
@@ -46,8 +52,15 @@
     }
 
     function init() {
-        window.addEventListener('keydown', handleKeyPress, true );
+        window.addEventListener('keydown', handleKeyPress, true);
 
+        ctx1.clearRect(0, 0, canvas.width, canvas.height);
+        ctx1.beginPath();
+        ctx1.arc(fBallPosition, canvas.height - 20, 10, 0, 360);
+        ctx1.closePath();
+
+        ctx1.fillStyle = 'green';
+        ctx1.fill();
     }
 
     function handleKeyPress(e) {
@@ -55,9 +68,12 @@
             move("left")
         } else if (e.keyCode === 39) {
             move("right")
+        }else if(e.keyCode === 32){
+            fire()
         }
-
     }
+
+    // function redraw()
 
 
 </script>
