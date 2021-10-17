@@ -96,9 +96,10 @@
                     return true;
                 }
             }
-            if (hit >0){
+            if (hit >=0){
                 opponentList[hit].clear()
                 opponentList.splice(hit,1);
+                this.clear()
             }
         }
 
