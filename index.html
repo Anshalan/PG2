@@ -82,10 +82,24 @@
             ctx1.fill();
         }
 
-        moveUp() {
+        moveUp(ball) {
             this.clear();
             this.currentY -= 10;
             this.draw();
+            var hit = opponentList.findIndex(checkCollision);
+            //
+            function checkCollision(element,index,array){
+
+                var distance = Math.sqrt(Math.pow(element.currentX - ball.currentX,2) + Math.pow(element.currentY - ball.currentY,2))
+                var maxAllowedDistance = ball.radius + element.radius;
+                if (distance <= maxAllowedDistance){
+                    return true;
+                }
+            }
+            if (hit >0){
+                opponentList[hit].clear()
+                opponentList.splice(hit,1);
+            }
         }
 
     }
@@ -128,10 +142,7 @@
     }
 
     init();
-    opponentHandle = setInterval(opponents,2500);
-    // opponents();
-    // opponents();
-    // opponents();
+    opponentHandle = setInterval(opponents, 2500);
 
     function fire() {
         // clearInterval(bulletHandle);
@@ -139,7 +150,7 @@
         var bulletHandle = setInterval(moveBullet, 10)
 
         function moveBullet() {
-            bullet.moveUp();
+            bullet.moveUp(bullet);
             if (bullet.currentX < 10) {
                 clearInterval(bulletHandle);
             }
@@ -178,11 +189,13 @@
             var opponent = new Opponent(40 * i, 40);
             opponentList.push(opponent);
         }
+
         function moveOpponents(item) {
-            item.currentY +=40;
+            item.currentY += 40;
             item.draw();
-            if (item.currentY >= 14*40){
+            if (item.currentY >= 14 * 40) {
                 clearInterval(opponentHandle);
+                //Gameover
             }
         }
     }
