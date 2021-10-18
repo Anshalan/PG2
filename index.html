@@ -20,6 +20,36 @@
     let playerBox;
     let opponentList = [];
     let points = 0;
+    let counter;
+    let gameOn = true;
+
+    class Counter {
+        counterValue;
+
+        constructor() {
+            this.counterValue = 0;
+            this.drawCounter();
+        }
+
+        addPoint() {
+            this.clearCounter();
+            this.counterValue++;
+            this.drawCounter();
+        }
+
+        drawCounter() {
+
+            ctx1.font = "50px Arial";
+            ctx1.fillStyle = "black";
+            ctx1.textAlign = "center";
+            // ctx1.globalCompositeOperation = 'source-over';
+            ctx1.fillText(this.counterValue, canvas.width / 2, 50);
+        }
+
+        clearCounter() {
+            ctx1.clearRect(0, 0, canvas.width, 50);
+        }
+    }
 
     class PlayerBox {
         width;
@@ -46,7 +76,7 @@
         }
 
         clear() {
-            ctx1.clearRect(this.currentX , this.currentY , this.width , this.height)
+            ctx1.clearRect(this.currentX, this.currentY, this.width, this.height)
         }
 
         setCurrentX(x) {
@@ -127,42 +157,51 @@
         window.addEventListener('keydown', handleKeyPress, true);
         playerBox = new PlayerBox(20, 40);
         playerBox.draw();
+        counter = new Counter();
+        counter.drawCounter();
+
     }
 
     init();
     // setInterval()
-    opponentHandle = setInterval(opponents, 3000);
+    opponentHandle = setInterval(opponents, 2500);
 
     function fire() {
         var bullet = new Bullet(playerBox.currentX, playerBox.currentY);
         var bulletHandle = setInterval(moveBullet, 10)
 
         function moveBullet() {
-            bullet.moveUp(bullet);
-            var hit = opponentList.findIndex(checkCollision);
+            if (gameOn) {
 
-            if (bullet.currentY < 60) {
-                bullet.clear();
-                bullet = null;
-                clearInterval(bulletHandle);
-            }
 
-            function checkCollision(element) {
+                bullet.moveUp(bullet);
+                var hit = opponentList.findIndex(checkCollision);
 
-                var distance = Math.sqrt(Math.pow(element.currentX - bullet.currentX, 2) + Math.pow(element.currentY - bullet.currentY, 2))
-                var maxAllowedDistance = bullet.radius + element.radius;
-                if (distance < maxAllowedDistance) {
-
-                    return true;
+                if (bullet.currentY < 75) {
+                    bullet.clear();
+                    bullet = null;
+                    clearInterval(bulletHandle);
                 }
-            }
 
-            if (hit >= 0) {
-                opponentList[hit].clear();
-                opponentList.splice(hit, 1);
+                function checkCollision(element) {
+
+                    var distance = Math.sqrt(Math.pow(element.currentX - bullet.currentX, 2) + Math.pow(element.currentY - bullet.currentY, 2))
+                    var maxAllowedDistance = bullet.radius + element.radius;
+                    if (distance < maxAllowedDistance) {
+                        counter.addPoint();
+                        return true;
+                    }
+                }
+
+                if (hit >= 0) {
+                    opponentList[hit].clear();
+                    opponentList.splice(hit, 1);
+                    bullet.clear();
+                    bullet = null;
+                    clearInterval(bulletHandle);
+                }
+            }else{
                 bullet.clear();
-                bullet = null;
-                clearInterval(bulletHandle);
             }
         }
     }
@@ -203,22 +242,21 @@
             item.currentY += 40;
             item.draw();
             if (item.currentY >= 13 * 40) {
-                opponentList.forEach(element => element.clear());
+                // opponentList.forEach(element => element.clear());
 
                 window.removeEventListener('keydown', handleKeyPress, true);
-                opponentList.forEach(element => element.clear());
-                ctx1.clearRect(0, 0, canvas.width, canvas.height);
-                clearInterval(opponentHandle);
-                // opponentList = null;
-                ctx1.clearRect(0, 0, canvas.width, canvas.height);
-
-
+                for (var i = 0; i < opponentList.length; i++) {
+                    opponentList[i].clear();
+                }
+                gameOn = false;
+                counter.clearCounter();
+                // counter = undefined;
                 ctx1.font = "50px Arial";
                 ctx1.fillStyle = "red";
                 ctx1.textAlign = "center";
 
-                ctx1.fillText("GAMEOVER", canvas.width/2, canvas.height/2);
-
+                ctx1.fillText("GAMEOVER your score: "+ counter.counterValue, canvas.width / 2, 50);
+                clearInterval(opponentHandle);
             }
         }
     }
