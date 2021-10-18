@@ -7,20 +7,19 @@
 <canvas id="myCanvas" width="800" height="600">
     Your browser does not support the canvas tag.
 </canvas>
-<h1 id = "popup"></h1>
+<h1 id="popup"></h1>
 
 
 <script>
-    var canvas = document.getElementById("myCanvas");
-    var ctx1 = canvas.getContext("2d");
+    let canvas = document.getElementById("myCanvas");
+    let ctx1 = canvas.getContext("2d");
     // var bulletY = -10;
     // var bulletX = -10;
-    var bulletHandle;
-    var opponentHandle;
-    var playerBox;
-    var opponentList = [];
-    var points = 0;
-    var keyListener;
+    let bulletHandle;
+    let opponentHandle;
+    let playerBox;
+    let opponentList = [];
+    let points = 0;
 
     class PlayerBox {
         width;
@@ -40,14 +39,14 @@
             this.clear();
             ctx1.beginPath();
             ctx1.rect(this.currentX, this.currentY, 40, 20);
-            ctx1.stroke();
+            // ctx1.stroke();
             ctx1.closePath();
             ctx1.fillStyle = "green";
             ctx1.fill();
         }
 
         clear() {
-            ctx1.clearRect(this.currentX - 1, this.currentY - 1, this.width + 2, this.height + 2)
+            ctx1.clearRect(this.currentX , this.currentY , this.width , this.height)
         }
 
         setCurrentX(x) {
@@ -61,7 +60,7 @@
         radius;
 
         constructor(boxX, boxY) {
-            this.radius = 10
+            this.radius = 10;
             this.currentX = boxX + 20;
             this.currentY = boxY - 15;
             this.draw();
@@ -109,7 +108,7 @@
             this.clear(); //???
             ctx1.beginPath();
             ctx1.arc(this.currentX, this.currentY, this.radius, 0, 360);
-            ctx1.stroke();
+            // ctx1.stroke();
             ctx1.closePath();
             ctx1.fillStyle = "orange";
             ctx1.fill();
@@ -125,7 +124,7 @@
     }
 
     function init() {
-        keyListener = window.addEventListener('keydown', handleKeyPress, true);
+        window.addEventListener('keydown', handleKeyPress, true);
         playerBox = new PlayerBox(20, 40);
         playerBox.draw();
     }
@@ -142,23 +141,24 @@
             bullet.moveUp(bullet);
             var hit = opponentList.findIndex(checkCollision);
 
-            if (bullet.currentX < 100) {
+            if (bullet.currentY < 60) {
                 bullet.clear();
                 bullet = null;
                 clearInterval(bulletHandle);
             }
+
             function checkCollision(element) {
 
                 var distance = Math.sqrt(Math.pow(element.currentX - bullet.currentX, 2) + Math.pow(element.currentY - bullet.currentY, 2))
                 var maxAllowedDistance = bullet.radius + element.radius;
-                if (distance <= maxAllowedDistance) {
+                if (distance < maxAllowedDistance) {
 
                     return true;
                 }
             }
 
             if (hit >= 0) {
-                opponentList[hit].clear()
+                opponentList[hit].clear();
                 opponentList.splice(hit, 1);
                 bullet.clear();
                 bullet = null;
@@ -203,14 +203,21 @@
             item.currentY += 40;
             item.draw();
             if (item.currentY >= 13 * 40) {
-                ctx1.clearRect(0,0,canvas.width, canvas.height)
+                opponentList.forEach(element => element.clear());
+
+                window.removeEventListener('keydown', handleKeyPress, true);
+                opponentList.forEach(element => element.clear());
+                ctx1.clearRect(0, 0, canvas.width, canvas.height);
                 clearInterval(opponentHandle);
-                // keyListener = null;
-                // ctx1.font = "50px Arial";
-                // ctx1.fillStyle = "red";
-                // ctx1.textAlign = "center";
-                //
-                // ctx1.fillText("GAMEOVER", canvas.width/2, canvas.height/2);
+                // opponentList = null;
+                ctx1.clearRect(0, 0, canvas.width, canvas.height);
+
+
+                ctx1.font = "50px Arial";
+                ctx1.fillStyle = "red";
+                ctx1.textAlign = "center";
+
+                ctx1.fillText("GAMEOVER", canvas.width/2, canvas.height/2);
 
             }
         }
