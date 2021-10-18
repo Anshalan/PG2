@@ -1,0 +1,260 @@
+<html>
+<head>
+    <title>PG2_lab1_2_no_points</title>
+    <meta name="author" content="Paweł Jędrzejczyk">
+</head>
+
+<body>
+<canvas id="myCanvas" width="800" height="600">
+    Your browser does not support the canvas tag.
+</canvas>
+<h1 id="popup"></h1>
+
+
+<script>
+    let canvas = document.getElementById("myCanvas");
+    let ctx1 = canvas.getContext("2d");
+    let bulletHandle;
+    let opponentHandle;
+    let playerBox;
+    let opponentList = [];
+    let points = 0;
+    let counter;
+    let gameOn = true;
+
+    class Counter {
+        counterValue;
+
+        constructor() {
+            this.counterValue = 0;
+            this.drawCounter();
+        }
+
+        addPoint() {
+            this.clearCounter();
+            this.counterValue++;
+            this.drawCounter();
+        }
+
+        drawCounter() {
+
+            ctx1.font = "50px Arial";
+            ctx1.fillStyle = "black";
+            ctx1.textAlign = "center";
+            ctx1.fillText(this.counterValue, canvas.width / 2, 50);
+        }
+
+        clearCounter() {
+            ctx1.clearRect(0, 0, canvas.width, 50);
+        }
+    }
+
+    class PlayerBox {
+        width;
+        height;
+        currentX;
+        currentY;
+
+        constructor(h, w) {
+            this.height = h;
+            this.width = w;
+            this.currentX = canvas.width / 2 - 20;
+            this.currentY = canvas.height - 60;
+            this.draw();
+        }
+
+        draw() {
+            this.clear();
+            ctx1.beginPath();
+            ctx1.rect(this.currentX, this.currentY, 40, 20);
+            ctx1.closePath();
+            ctx1.fillStyle = "green";
+            ctx1.fill();
+        }
+
+        clear() {
+            ctx1.clearRect(this.currentX, this.currentY, this.width, this.height)
+        }
+
+        setCurrentX(x) {
+            this.currentX += x;
+        }
+    }
+
+    class Bullet {
+        currentX;
+        currentY;
+        radius;
+
+        constructor(boxX, boxY) {
+            this.radius = 10;
+            this.currentX = boxX + 20;
+            this.currentY = boxY - 15;
+            this.draw();
+        }
+
+        draw() {
+            this.clear();
+            ctx1.beginPath();
+            ctx1.arc(this.currentX, this.currentY, this.radius, 0, 360);
+            ctx1.stroke();
+            ctx1.closePath();
+            ctx1.fillStyle = "red";
+            ctx1.fill();
+        }
+
+        clear() {
+            ctx1.beginPath();
+            ctx1.arc(this.currentX, this.currentY, this.radius + 2, 0, 360);
+            ctx1.closePath();
+            ctx1.fillStyle = 'white';
+            ctx1.fill();
+        }
+
+        moveUp() {
+            this.clear();
+            this.currentY -= 10;
+            this.draw();
+
+        }
+    }
+
+    class Opponent {
+        currentX;
+        currentY;
+        radius;
+
+        constructor(X, Y) {
+            this.radius = 18;
+            this.currentX = X;
+            this.currentY = Y;
+            this.draw();
+        }
+
+        draw() {
+            this.clear();
+            ctx1.beginPath();
+            ctx1.arc(this.currentX, this.currentY, this.radius, 0, 360);
+            ctx1.closePath();
+            ctx1.fillStyle = "orange";
+            ctx1.fill();
+        }
+
+        clear() {
+            ctx1.beginPath();
+            ctx1.arc(this.currentX, this.currentY, this.radius + 2, 0, 360);
+            ctx1.closePath();
+            ctx1.fillStyle = 'white';
+            ctx1.fill();
+        }
+    }
+
+    function init() {
+        window.addEventListener('keydown', handleKeyPress, true);
+        playerBox = new PlayerBox(20, 40);
+        playerBox.draw();
+        counter = new Counter();
+        counter.drawCounter();
+
+    }
+
+    init();
+    opponentHandle = setInterval(opponents, 2500);
+
+    function fire() {
+        var bullet = new Bullet(playerBox.currentX, playerBox.currentY);
+        var bulletHandle = setInterval(moveBullet, 10)
+
+        function moveBullet() {
+            if (gameOn) {
+
+
+                bullet.moveUp(bullet);
+                var hit = opponentList.findIndex(checkCollision);
+
+                if (bullet.currentY < 75) {
+                    bullet.clear();
+                    bullet = null;
+                    clearInterval(bulletHandle);
+                }
+
+                function checkCollision(element) {
+
+                    var distance = Math.sqrt(Math.pow(element.currentX - bullet.currentX, 2) + Math.pow(element.currentY - bullet.currentY, 2))
+                    var maxAllowedDistance = bullet.radius + element.radius;
+                    if (distance < maxAllowedDistance) {
+                        counter.addPoint();
+                        return true;
+                    }
+                }
+
+                if (hit >= 0) {
+                    opponentList[hit].clear();
+                    opponentList.splice(hit, 1);
+                    bullet.clear();
+                    bullet = null;
+                    clearInterval(bulletHandle);
+                }
+            }else{
+                bullet.clear();
+            }
+        }
+    }
+
+
+    function move(s) {
+        playerBox.clear();
+        if (s === "left") {
+            if (playerBox.currentX >= 40) {
+                playerBox.setCurrentX(-40)
+            }
+        } else if (s === "right") {
+            if (playerBox.currentX <= (canvas.width - 80)) {
+                playerBox.setCurrentX(40)
+            }
+        }
+        playerBox.draw();
+    }
+
+    function handleKeyPress(e) {
+        if (e.keyCode === 37) {
+            move("left")
+        } else if (e.keyCode === 39) {
+            move("right")
+        } else if (e.keyCode === 32) {
+            fire()
+        }
+    }
+
+    function opponents() {
+        opponentList.forEach(moveOpponents);
+        for (let i = 1; i < 20; i++) {
+            var opponent = new Opponent(40 * i, 80);
+            opponentList.push(opponent);
+        }
+
+        function moveOpponents(item) {
+            item.currentY += 40;
+            item.draw();
+            if (item.currentY >= 13 * 40) {
+                window.removeEventListener('keydown', handleKeyPress, true);
+                for (var i = 0; i < opponentList.length; i++) {
+                    opponentList[i].clear();
+                }
+                gameOn = false;
+                counter.clearCounter();
+                ctx1.font = "50px Arial";
+                ctx1.fillStyle = "red";
+                ctx1.textAlign = "center";
+
+                ctx1.fillText("GAMEOVER your score: "+ counter.counterValue, canvas.width / 2, 50);
+                clearInterval(opponentHandle);
+            }
+        }
+    }
+
+</script>
+
+</body>
+
+</html>
