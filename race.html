@@ -22,10 +22,12 @@
     class Car {
         width;
         height;
+        // wheels[]
 
         constructor() {
             this.width = 20;
             this.height = 40;
+            // this.wheels = new Array();
             this.drawCar()
         }
         drawCar() {
@@ -34,7 +36,26 @@
         }
     }
 
+    class Road{
+        constructor() {
+            this.drawRoad();
+        }
+        drawRoad(){
+            ctx.beginPath();
+            ctx.moveTo(canvas.width/9*2 ,canvas.height);
+            ctx.lineTo(canvas.width/9*3, 0);
+            ctx.lineTo(canvas.width/9*6,0);
+            ctx.lineTo(canvas.width/9*7,canvas.height);
+            ctx.closePath();
+            // ctx.lineTo(canvas/9*6,0);0
+            ctx.fillStyle = 'grey';
+            ctx.fill();
+            car.drawCar()
+        }
+    }
+
     let car = new Car;
+    let road = new Road();
 
 
 </script>
