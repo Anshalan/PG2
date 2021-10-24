@@ -1,0 +1,44 @@
+<html>
+
+<head>
+    <title>PG2_lab1_2_no_points</title>
+    <meta name="author" content="Paweł Jędrzejczyk">
+    <!-- <style>
+        canvas {
+            margin: auto;
+            display: block;
+        }
+    </style> -->
+</head>
+
+<body>
+<canvas id="myCanvas" width="800" height="600">
+    Your browser does not support the canvas tag.
+</canvas>
+<script>
+    let canvas = document.getElementById("myCanvas");
+    let ctx = canvas.getContext("2d");
+    //
+    class Car {
+        width;
+        height;
+
+        constructor() {
+            this.width = 20;
+            this.height = 40;
+            this.drawCar()
+        }
+        drawCar() {
+            ctx.fillStyle = 'green';
+            ctx.fillRect(canvas.width/2 - 10, canvas.height - 50, 20, 40);
+        }
+    }
+
+    let car = new Car;
+
+
+</script>
+
+</body>
+
+</html>
