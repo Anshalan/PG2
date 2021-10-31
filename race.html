@@ -18,56 +18,7 @@
 <script>
     let canvas = document.getElementById("myCanvas");
     let ctx = canvas.getContext("2d");
-    //
-    // class Car {
-    //     width;
-    //     height;
-    //     X;
-    //     Y;
-    //     constructor() {
-    //         this.width = 40;
-    //         this.height = 80;
-    //         this.X = canvas.width/2 - 10
-    //         this.Y = canvas.height - 100
-    //         // this.wheels = new Array();
-    //         this.drawCar()
-    //
-    //     }
-    //     drawCar() {
-    //         ctx.fillStyle = 'pink';
-    //         ctx.fillRect(this.X, this.Y, this.width, this.height);
-    //         this.drawWheels()
-    //         // this.rotateCar()
-    //     }
-    //     drawWheels(){
-    //         ctx.fillStyle = 'black';
-    //         ctx.fillRect(this.X-3, this.Y+5, 8, 15);
-    //         ctx.fillRect(this.X-3, this.Y+this.height-15-5, 8, 15);
-    //         ctx.fillRect(this.X+this.width-5, this.Y+5, 8, 15);
-    //         ctx.fillRect(this.X+this.width-5, this.Y+this.height-15-5, 8, 15);
-    //
-    //     }
-    //     rotateCar(direction){
-    //         this.clearCar()
-    //         ctx.translate((this.X+this.width/2), (this.Y+this.height/2))
-    //         if (direction === 'left')
-    //         {ctx.rotate(-0.1);}
-    //         else if (direction === 'right')
-    //        { ctx.rotate(0.1)};
-    //         ctx.translate(-(this.X+this.width/2), -(this.Y+this.height/2))
-    //
-    //         this.drawCar()
-    //     }
-    //     clearCar()
-    //     {
-    //         ctx.fillStyle = 'white';
-    //         ctx.fillRect(this.X-3, this.Y+5, 8, 15);
-    //         ctx.fillRect(this.X-3, this.Y+this.height-15-5, 8, 15);
-    //         ctx.fillRect(this.X+this.width-5, this.Y+5, 8, 15);
-    //         ctx.fillRect(this.X+this.width-5, this.Y+this.height-15-5, 8, 15);
-    //         ctx.fillRect(this.X, this.Y, this.width, this.height);
-    //     }
-    // }
+    let roadInterval;
 
     class RoadSegment {
         x;
@@ -238,6 +189,8 @@
                     this.roadArray[j].leftCurb) || this.car.checkCollision(
                     this.roadArray[j].rightCurb)){
                     this.car.color = 'pink';
+                    this.car.draw();
+                    clearInterval(roadInterval)
                 }
             }
             if (this.moveCounter === 10) {
@@ -277,7 +230,7 @@
         game.moveRoad();
     }
 
-    window.setInterval(aaa, 1)
+    roadInterval = window.setInterval(aaa, 1)
 
     // game.moveRoad();
 
