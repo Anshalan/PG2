@@ -19,146 +19,215 @@
     let canvas = document.getElementById("myCanvas");
     let ctx = canvas.getContext("2d");
     //
-    class Car {
-        width;
-        height;
-        X;
-        Y;
-        constructor() {
-            this.width = 40;
-            this.height = 80;
-            this.X = canvas.width/2 - 10
-            this.Y = canvas.height - 100
-            // this.wheels = new Array();
-            this.drawCar()
+    // class Car {
+    //     width;
+    //     height;
+    //     X;
+    //     Y;
+    //     constructor() {
+    //         this.width = 40;
+    //         this.height = 80;
+    //         this.X = canvas.width/2 - 10
+    //         this.Y = canvas.height - 100
+    //         // this.wheels = new Array();
+    //         this.drawCar()
+    //
+    //     }
+    //     drawCar() {
+    //         ctx.fillStyle = 'pink';
+    //         ctx.fillRect(this.X, this.Y, this.width, this.height);
+    //         this.drawWheels()
+    //         // this.rotateCar()
+    //     }
+    //     drawWheels(){
+    //         ctx.fillStyle = 'black';
+    //         ctx.fillRect(this.X-3, this.Y+5, 8, 15);
+    //         ctx.fillRect(this.X-3, this.Y+this.height-15-5, 8, 15);
+    //         ctx.fillRect(this.X+this.width-5, this.Y+5, 8, 15);
+    //         ctx.fillRect(this.X+this.width-5, this.Y+this.height-15-5, 8, 15);
+    //
+    //     }
+    //     rotateCar(direction){
+    //         this.clearCar()
+    //         ctx.translate((this.X+this.width/2), (this.Y+this.height/2))
+    //         if (direction === 'left')
+    //         {ctx.rotate(-0.1);}
+    //         else if (direction === 'right')
+    //        { ctx.rotate(0.1)};
+    //         ctx.translate(-(this.X+this.width/2), -(this.Y+this.height/2))
+    //
+    //         this.drawCar()
+    //     }
+    //     clearCar()
+    //     {
+    //         ctx.fillStyle = 'white';
+    //         ctx.fillRect(this.X-3, this.Y+5, 8, 15);
+    //         ctx.fillRect(this.X-3, this.Y+this.height-15-5, 8, 15);
+    //         ctx.fillRect(this.X+this.width-5, this.Y+5, 8, 15);
+    //         ctx.fillRect(this.X+this.width-5, this.Y+this.height-15-5, 8, 15);
+    //         ctx.fillRect(this.X, this.Y, this.width, this.height);
+    //     }
+    // }
 
-        }
-        drawCar() {
-            ctx.fillStyle = 'pink';
-            ctx.fillRect(this.X, this.Y, this.width, this.height);
-            this.drawWheels()
-            // this.rotateCar()
-        }
-        drawWheels(){
-            ctx.fillStyle = 'black';
-            ctx.fillRect(this.X-3, this.Y+5, 8, 15);
-            ctx.fillRect(this.X-3, this.Y+this.height-15-5, 8, 15);
-            ctx.fillRect(this.X+this.width-5, this.Y+5, 8, 15);
-            ctx.fillRect(this.X+this.width-5, this.Y+this.height-15-5, 8, 15);
-
-        }
-        rotateCar(direction){
-            this.clearCar()
-            ctx.translate((this.X+this.width/2), (this.Y+this.height/2))
-            if (direction === 'left')
-            {ctx.rotate(-0.1);}
-            else if (direction === 'right')
-           { ctx.rotate(0.1)};
-            ctx.translate(-(this.X+this.width/2), -(this.Y+this.height/2))
-
-            this.drawCar()
-        }
-        clearCar()
-        {
-            ctx.fillStyle = 'white';
-            ctx.fillRect(this.X-3, this.Y+5, 8, 15);
-            ctx.fillRect(this.X-3, this.Y+this.height-15-5, 8, 15);
-            ctx.fillRect(this.X+this.width-5, this.Y+5, 8, 15);
-            ctx.fillRect(this.X+this.width-5, this.Y+this.height-15-5, 8, 15);
-            ctx.fillRect(this.X, this.Y, this.width, this.height);
-        }
-    }
-
-    class RoadSegment{
-        
-    }
-
-
-    class Road{
+    class RoadSegment {
+        x;
+        y;
         leftCurb;
         rightCurb;
-        constructor() {
-            this.drawRoad();
+        curbColor;
+        width;
+        height;
+
+        constructor(X, Y, curbColor) {
+            this.x = X;
+            this.y = Y;
+            this.width = 300;
+            this.height = 60; // change do less
+            this.curbColor = curbColor;
+            this.draw()
         }
-        drawRoad(){
-            ctx.beginPath();
-            ctx.moveTo(canvas.width/9*3 ,canvas.height);
-            ctx.lineTo(canvas.width/9*3, 0);
-            ctx.lineTo(canvas.width/9*6,0);
-            ctx.lineTo(canvas.width/9*6,canvas.height);
-            ctx.closePath();
+
+        draw() {
             ctx.fillStyle = 'grey';
-            ctx.fill();
-            car.drawCar()
-        }
-    }
-    class RoadLeft{
-        constructor() {
-            this.drawRoad();
-        }
-        drawRoad(){
-            ctx.beginPath();
-            // ctx.moveTo(canvas.width/9*3 ,canvas.height);
-            ctx.arc(-1000, canvas.height,canvas.width/3 + 1000,0, 90);
-            ctx.lineTo(-1000,canvas.width/3 + 1000,canvas.height);
-            ctx.arc(-1000, canvas.height,canvas.width/3 + 1000 + canvas.width/3,0, 90, true);
+            ctx.fillRect(this.x, this.y, this.width, this.height)
+            this.leftCurb = new Curb(this.x - 30, this.y, this.curbColor);
+            this.rightCurb = new Curb(this.x + this.width, this.y, this.curbColor);
 
-            ctx.closePath();
-            ctx.fillStyle = 'grey';
-            ctx.fill();
-            car.drawCar()
-        }
-    }
-    class RoadRight{
-        constructor() {
-            this.drawRoad();
-        }
-        drawRoad(){
-            ctx.beginPath();
-            // ctx.moveTo(canvas.width/9*3 ,canvas.height);
-            ctx.arc(1000+ canvas.width, canvas.height,canvas.width/3 + 1000,180, 90, true);
-            ctx.lineTo(1000+ canvas.width,canvas.width/3 + 1000,canvas.height);
-            ctx.arc(1000+ canvas.width, canvas.height,canvas.width/3*2 + 1000,90, 180);
-
-            ctx.closePath();
-            ctx.fillStyle = 'grey';
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.lineWidth = 10
-            ctx.strokeStyle = 'white'
-            ctx.setLineDash([50, 50]);
-            ctx.beginPath();
-            ctx.arc(1000+ canvas.width, canvas.height,canvas.width/2 + 1000,180, 90, true);
-            // ctx.arc(1000+ canvas.width, canvas.height,canvas.width/2 + 1000,185, 91, true);
-            ctx.closePath();
-            ctx.stroke();
-            ctx.rotate(0)
-
-            car.drawCar()
         }
     }
 
-    function handleKeyPress(e) {
-        if (e.keyCode === 37) {
-            car.rotateCar("left")
-        } else if (e.keyCode === 39) {
-            car.rotateCar("right")
+    class Curb {
+        x;
+        y;
+        width;
+        height;
+        color;
+
+        constructor(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.width = 30;
+            this.height = 60;
+            this.draw()
+        }
+
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x, this.y, this.width, this.height)
         }
     }
+
+    class Background {
+        color;
+
+        constructor(color) {
+            this.color = color;
+            this.draw()
+        }
+
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        }
+    }
+    bck = new Background("pink");
+    rs = new RoadSegment(250, 540, "white");
+    rs = new RoadSegment(245, 480, "red");
+    rs = new RoadSegment(240, 420, "white");
+    rs = new RoadSegment(235, 360, "red");
+    rs = new RoadSegment(230, 300, "white");
+    rs = new RoadSegment(225, 240, "red");
+    rs = new RoadSegment(220, 180, "white");
+    rs = new RoadSegment(215, 120, "red");
+    rs = new RoadSegment(210, 60, "white");
+    rs = new RoadSegment(205, 0, "red");
+
+
+    // class Road{
+    //     leftCurb;
+    //     rightCurb;
+    //     constructor() {
+    //         this.drawRoad();
+    //     }
+    //     drawRoad(){
+    //         ctx.beginPath();
+    //         ctx.moveTo(canvas.width/9*3 ,canvas.height);
+    //         ctx.lineTo(canvas.width/9*3, 0);
+    //         ctx.lineTo(canvas.width/9*6,0);
+    //         ctx.lineTo(canvas.width/9*6,canvas.height);
+    //         ctx.closePath();
+    //         ctx.fillStyle = 'grey';
+    //         ctx.fill();
+    //         car.drawCar()
+    //     }
+    // }
+    // class RoadLeft{
+    //     constructor() {
+    //         this.drawRoad();
+    //     }
+    //     drawRoad(){
+    //         ctx.beginPath();
+    //         // ctx.moveTo(canvas.width/9*3 ,canvas.height);
+    //         ctx.arc(-1000, canvas.height,canvas.width/3 + 1000,0, 90);
+    //         ctx.lineTo(-1000,canvas.width/3 + 1000,canvas.height);
+    //         ctx.arc(-1000, canvas.height,canvas.width/3 + 1000 + canvas.width/3,0, 90, true);
+    //
+    //         ctx.closePath();
+    //         ctx.fillStyle = 'grey';
+    //         ctx.fill();
+    //         car.drawCar()
+    //     }
+    // }
+    // class RoadRight{
+    //     constructor() {
+    //         this.drawRoad();
+    //     }
+    //     drawRoad(){
+    //         ctx.beginPath();
+    //         // ctx.moveTo(canvas.width/9*3 ,canvas.height);
+    //         ctx.arc(1000+ canvas.width, canvas.height,canvas.width/3 + 1000,180, 90, true);
+    //         ctx.lineTo(1000+ canvas.width,canvas.width/3 + 1000,canvas.height);
+    //         ctx.arc(1000+ canvas.width, canvas.height,canvas.width/3*2 + 1000,90, 180);
+    //
+    //         ctx.closePath();
+    //         ctx.fillStyle = 'grey';
+    //         ctx.fill();
+    //
+    //         ctx.beginPath();
+    //         ctx.lineWidth = 10
+    //         ctx.strokeStyle = 'white'
+    //         ctx.setLineDash([50, 50]);
+    //         ctx.beginPath();
+    //         ctx.arc(1000+ canvas.width, canvas.height,canvas.width/2 + 1000,180, 90, true);
+    //         // ctx.arc(1000+ canvas.width, canvas.height,canvas.width/2 + 1000,185, 91, true);
+    //         ctx.closePath();
+    //         ctx.stroke();
+    //         ctx.rotate(0)
+    //
+    //         car.drawCar()
+    //     }
+    // }
+
+    // function handleKeyPress(e) {
+    //     if (e.keyCode === 37) {
+    //         car.rotateCar("left")
+    //     } else if (e.keyCode === 39) {
+    //         car.rotateCar("right")
+    //     }
+    // }
 
     // document.onkeydown = (event) => { handleKeyPress(event, true) };
     // document.onkeyup = (event) => {handleKeyPress(event, false) };
-    window.addEventListener('keydown', handleKeyPress, true)
-    let car = new Car;
+    // window.addEventListener('keydown', handleKeyPress, true)
+    // let car = new Car;
     // car.rotateCar('left');
 
 
-    let road = new Road();
+    // let road = new Road();
     // let right = new RoadRight()
     // let left = new RoadLeft()
-
-
 
 
 </script>
