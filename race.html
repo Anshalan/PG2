@@ -90,7 +90,7 @@
         draw() {
             ctx.fillStyle = 'grey';
             ctx.fillRect(this.x, this.y, this.width, this.height)
-            this.leftCurb = new Curb(this.x - 30, this.y, this.curbColor);
+            this.leftCurb = new Curb(this.x - 20, this.y, this.curbColor);
             this.rightCurb = new Curb(this.x + this.width, this.y, this.curbColor);
         }
         move(){
@@ -115,7 +115,7 @@
             this.x = x;
             this.y = y;
             this.color = color;
-            this.width = 30;
+            this.width = 20;
             this.height = 60;
             this.draw()
         }
@@ -161,22 +161,37 @@
             new RoadSegment(250, 60, "white"),
             new RoadSegment(250, 0, "red")
             ];
+
         }
         moveRoad(){
             this.background.draw();
-            // this.roadArray.shift();
+            this.roadArray.shift();
             this.roadArray.forEach(this.moveRoadElement);
-            this.roadArray.push(new RoadSegment(250, 0, this.roadArray[0].getColor()))
+            this.roadArray.push(new RoadSegment(250 + this.randRoadDirection(), 0, this.roadArray[1].getColor()))
+        }
+        randRoadDirection(){
+            let coin = Math.floor((Math.random() * 10) + 1);
+            if(coin < 4){
+                return -5;
+            }else if (coin < 7){
+                return +5;
+            }else {
+                return 0;
+            }
         }
         moveRoadElement(item){
             item.move();
         }
-        // drawRoad(item){
-        //     item.draw()
-        // }
+
     }
+
     game = new Race();
-    game.moveRoad();
+    function aaa(){
+        game.moveRoad();
+    }
+    window.setInterval(aaa, 250)
+
+    // game.moveRoad();
 
 
 
