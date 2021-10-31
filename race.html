@@ -19,6 +19,9 @@
     let canvas = document.getElementById("myCanvas");
     let ctx = canvas.getContext("2d");
     let roadInterval;
+    let keyboardEventListenerDown;
+    let keyboardEventListenerUp;
+
 
     class RoadSegment {
         x;
@@ -52,8 +55,6 @@
         move() {
             this.y = this.y + 6;
             this.draw();
-            // this.rightCurb.move();
-            // this.leftCurb.move();
         }
 
         getColor() {
@@ -85,7 +86,6 @@
             ctx.fillStyle = this.color;
             ctx.fillRect(this.x, this.y, this.width, this.height)
         }
-
     }
 
     class Background {
@@ -102,6 +102,26 @@
 
         }
     }
+    class Wheel{
+        x;
+        y;
+        height;
+        width;
+        color;
+
+        constructor(x,y) {
+            this.x = x;
+            this.y = y;
+            this.height = 15;
+            this.width = 8;
+            this.color = 'black';
+            this.draw();
+        }
+        draw(){
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x,this.y,this.width,this.height)
+        }
+    }
 
     class Car {
         width;
@@ -109,7 +129,11 @@
         wheels;
         x;
         y;
-        color
+        color;
+        moveLeft;
+        moveRight;
+        wheels;
+
 
         constructor() {
             this.height = 60;
@@ -117,30 +141,63 @@
             this.x = 380;
             this.y = 530;
             this.color = "cyan"
+            this.moveLeft = false;
+            this.moveRight = false;
+            this.wheels = [
+                new Wheel(this.x,this.y+3),
+                new Wheel(this.x,this.y+45),
+                new Wheel(this.x+32,this.y+3),
+                new Wheel(this.x+32,this.y+45)
+            ];
+
+
             this.draw();
+            keyboardEventListenerDown = window.addEventListener("keydown", moveCarStart, true);
+            keyboardEventListenerUp = window.addEventListener("keyup", moveCarStop, true);
 
         }
 
         draw() {
             ctx.fillStyle = this.color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
+            for(let i = 0; i < this.wheels.length; i++){
+                this.wheels[i].draw();
+            }
         }
 
-        // checkCollision(itemX, itemY, itemWidth, itemHeight) {
-        //     return !(this.x + this.width < itemX ||
-        //         itemX + itemWidth < this.x ||
-        //         this.y + this.height < itemY ||
-        //         itemY + itemHeight < this.y);
-        // }
         checkCollision(item) {
             return !(this.x + this.width < item.x ||
                 item.x + item.width < this.x ||
                 this.y + this.height < item.y ||
                 item.y + item.height < this.y);
         }
-        // setColor(color){
-        //     this
-        // }
+
+        changeX(value) {
+            this.x += value;
+            for(let i = 0; i < this.wheels.length; i++){
+                this.wheels[i].x +=value;
+            }
+        }
+
+        moveStart(key) {
+            if (key.keyCode === 37) {
+                this.moveLeft = true;
+            }
+            if (key.keyCode === 39) {
+                this.moveRight = true;
+            }
+
+        }
+        moveStop(key) {
+            if (key.keyCode === 37) {
+                this.moveLeft = false;
+            }
+            if (key.keyCode === 39) {
+                this.moveRight = false;
+
+            }
+
+        }
 
     }
 
@@ -151,6 +208,7 @@
         moveCounter;
         turnCounter;
         turn;
+
 
         constructor() {
             this.car = new Car();
@@ -171,8 +229,11 @@
                 new RoadSegment(250, 0, "red"),
                 new RoadSegment(250, -60, "white")
             ];
-
         }
+
+        // moveCar(e) {
+        //     this.car.move(e);
+        // }
 
         moveRoad() {
             this.moveCounter++;
@@ -183,11 +244,17 @@
             }
             this.background.draw();
             this.roadArray.forEach(this.moveRoadElement);
+            if (this.car.moveLeft) {
+                this.car.changeX(-3);
+            }
+            if (this.car.moveRight) {
+                this.car.changeX(3);
+            }
             this.car.draw();
-            for(let j = 0; j < 3; j++){
-                if(this.car.checkCollision(
+            for (let j = 0; j < 3; j++) {
+                if (this.car.checkCollision(
                     this.roadArray[j].leftCurb) || this.car.checkCollision(
-                    this.roadArray[j].rightCurb)){
+                    this.roadArray[j].rightCurb)) {
                     this.car.color = 'pink';
                     this.car.draw();
                     clearInterval(roadInterval)
@@ -202,17 +269,16 @@
                 } else if (newX > 440) {
                     newX = 440;
                 }
-
                 this.roadArray.push(new RoadSegment(newX, -60, this.roadArray[0].getColor()))
             }
         }
 
         randRoadDirection() {
             let coin = Math.floor((Math.random() * 10) + 1);
-            if (coin < 4) {
-                return -5;
-            } else if (coin < 7) {
-                return 5;
+            if (coin < 5) {
+                return -4;
+            } else if (coin < 9) {
+                return 4;
             } else {
                 return 0;
             }
@@ -221,7 +287,6 @@
         moveRoadElement(item) {
             item.move();
         }
-
     }
 
     game = new Race();
@@ -230,96 +295,15 @@
         game.moveRoad();
     }
 
-    roadInterval = window.setInterval(aaa, 1)
+    function moveCarStart(e) {
+        game.car.moveStart(e);
+    }
 
-    // game.moveRoad();
+    function moveCarStop(e) {
+        game.car.moveStop(e);
+    }
 
-
-    // class Road{
-    //     leftCurb;
-    //     rightCurb;
-    //     constructor() {
-    //         this.drawRoad();
-    //     }
-    //     drawRoad(){
-    //         ctx.beginPath();
-    //         ctx.moveTo(canvas.width/9*3 ,canvas.height);
-    //         ctx.lineTo(canvas.width/9*3, 0);
-    //         ctx.lineTo(canvas.width/9*6,0);
-    //         ctx.lineTo(canvas.width/9*6,canvas.height);
-    //         ctx.closePath();
-    //         ctx.fillStyle = 'grey';
-    //         ctx.fill();
-    //         car.drawCar()
-    //     }
-    // }
-    // class RoadLeft{
-    //     constructor() {
-    //         this.drawRoad();
-    //     }
-    //     drawRoad(){
-    //         ctx.beginPath();
-    //         // ctx.moveTo(canvas.width/9*3 ,canvas.height);
-    //         ctx.arc(-1000, canvas.height,canvas.width/3 + 1000,0, 90);
-    //         ctx.lineTo(-1000,canvas.width/3 + 1000,canvas.height);
-    //         ctx.arc(-1000, canvas.height,canvas.width/3 + 1000 + canvas.width/3,0, 90, true);
-    //
-    //         ctx.closePath();
-    //         ctx.fillStyle = 'grey';
-    //         ctx.fill();
-    //         car.drawCar()
-    //     }
-    // }
-    // class RoadRight{
-    //     constructor() {
-    //         this.drawRoad();
-    //     }
-    //     drawRoad(){
-    //         ctx.beginPath();
-    //         // ctx.moveTo(canvas.width/9*3 ,canvas.height);
-    //         ctx.arc(1000+ canvas.width, canvas.height,canvas.width/3 + 1000,180, 90, true);
-    //         ctx.lineTo(1000+ canvas.width,canvas.width/3 + 1000,canvas.height);
-    //         ctx.arc(1000+ canvas.width, canvas.height,canvas.width/3*2 + 1000,90, 180);
-    //
-    //         ctx.closePath();
-    //         ctx.fillStyle = 'grey';
-    //         ctx.fill();
-    //
-    //         ctx.beginPath();
-    //         ctx.lineWidth = 10
-    //         ctx.strokeStyle = 'white'
-    //         ctx.setLineDash([50, 50]);
-    //         ctx.beginPath();
-    //         ctx.arc(1000+ canvas.width, canvas.height,canvas.width/2 + 1000,180, 90, true);
-    //         // ctx.arc(1000+ canvas.width, canvas.height,canvas.width/2 + 1000,185, 91, true);
-    //         ctx.closePath();
-    //         ctx.stroke();
-    //         ctx.rotate(0)
-    //
-    //         car.drawCar()
-    //     }
-    // }
-
-    // function handleKeyPress(e) {
-    //     if (e.keyCode === 37) {
-    //         car.rotateCar("left")
-    //     } else if (e.keyCode === 39) {
-    //         car.rotateCar("right")
-    //     }
-    // }
-
-    // document.onkeydown = (event) => { handleKeyPress(event, true) };
-    // document.onkeyup = (event) => {handleKeyPress(event, false) };
-    // window.addEventListener('keydown', handleKeyPress, true)
-    // let car = new Car;
-    // car.rotateCar('left');
-
-
-    // let road = new Road();
-    // let right = new RoadRight()
-    // let left = new RoadLeft()
-
-
+    roadInterval = window.setInterval(aaa, 15)
 </script>
 
 </body>
