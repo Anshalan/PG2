@@ -69,6 +69,11 @@
         }
     }
 
+    class RoadSegment{
+        
+    }
+
+
     class Road{
         leftCurb;
         rightCurb;
@@ -134,11 +139,22 @@
         }
     }
 
+    function handleKeyPress(e) {
+        if (e.keyCode === 37) {
+            car.rotateCar("left")
+        } else if (e.keyCode === 39) {
+            car.rotateCar("right")
+        }
+    }
+
+    // document.onkeydown = (event) => { handleKeyPress(event, true) };
+    // document.onkeyup = (event) => {handleKeyPress(event, false) };
+    window.addEventListener('keydown', handleKeyPress, true)
     let car = new Car;
-    car.rotateCar('left');
+    // car.rotateCar('left');
 
 
-    // // let road = new Road();
+    let road = new Road();
     // let right = new RoadRight()
     // let left = new RoadLeft()
 
