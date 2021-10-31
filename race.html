@@ -152,31 +152,47 @@
         }
     }
 
-    class Car{
+    class Car {
         width;
         height;
         wheels;
         x;
         y;
+        color
 
         constructor() {
             this.height = 60;
-            this.width=40;
+            this.width = 40;
             this.x = 380;
             this.y = 530;
+            this.color = "cyan"
             this.draw();
 
         }
-        draw(){
-            ctx.fillStyle = "cyan";
-            ctx.fillRect(this.x,this.y,this.width, this.height);
+
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
         }
-        // checkCollision(curbX,curbY){
-        //     if
-        //
+
+        // checkCollision(itemX, itemY, itemWidth, itemHeight) {
+        //     return !(this.x + this.width < itemX ||
+        //         itemX + itemWidth < this.x ||
+        //         this.y + this.height < itemY ||
+        //         itemY + itemHeight < this.y);
+        // }
+        checkCollision(item) {
+            return !(this.x + this.width < item.x ||
+                item.x + item.width < this.x ||
+                this.y + this.height < item.y ||
+                item.y + item.height < this.y);
+        }
+        // setColor(color){
+        //     this
         // }
 
     }
+
     class Race {
         roadArray;
         car;
@@ -217,35 +233,41 @@
             this.background.draw();
             this.roadArray.forEach(this.moveRoadElement);
             this.car.draw();
+            for(let j = 0; j < 3; j++){
+                if(this.car.checkCollision(
+                    this.roadArray[j].leftCurb) || this.car.checkCollision(
+                    this.roadArray[j].rightCurb)){
+                    this.car.color = 'pink';
+                }
+            }
             if (this.moveCounter === 10) {
                 this.moveCounter = 0;
                 this.roadArray.shift();
                 var newX = this.roadArray[9].getX() + this.turn;
                 if (newX < 20) {
                     newX = 20;
-                }else if (newX > 440){
+                } else if (newX > 440) {
                     newX = 440;
+                }
+
+                this.roadArray.push(new RoadSegment(newX, -60, this.roadArray[0].getColor()))
             }
-            this.roadArray.push(new RoadSegment(newX, -60, this.roadArray[0].getColor()))
         }
-    }
 
-    randRoadDirection()
-    {
-        let coin = Math.floor((Math.random() * 10) + 1);
-        if (coin < 4) {
-            return -5;
-        } else if (coin < 7) {
-            return 5;
-        } else {
-            return 0;
+        randRoadDirection() {
+            let coin = Math.floor((Math.random() * 10) + 1);
+            if (coin < 4) {
+                return -5;
+            } else if (coin < 7) {
+                return 5;
+            } else {
+                return 0;
+            }
         }
-    }
 
-    moveRoadElement(item)
-    {
-        item.move();
-    }
+        moveRoadElement(item) {
+            item.move();
+        }
 
     }
 
@@ -255,7 +277,7 @@
         game.moveRoad();
     }
 
-    window.setInterval(aaa, 800)
+    window.setInterval(aaa, 1)
 
     // game.moveRoad();
 
