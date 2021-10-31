@@ -132,17 +132,30 @@
 
         }
     }
-    bck = new Background("pink");
-    rs = new RoadSegment(250, 540, "white");
-    rs = new RoadSegment(245, 480, "red");
-    rs = new RoadSegment(240, 420, "white");
-    rs = new RoadSegment(235, 360, "red");
-    rs = new RoadSegment(230, 300, "white");
-    rs = new RoadSegment(225, 240, "red");
-    rs = new RoadSegment(220, 180, "white");
-    rs = new RoadSegment(215, 120, "red");
-    rs = new RoadSegment(210, 60, "white");
-    rs = new RoadSegment(205, 0, "red");
+
+    class Race{
+        roadArray;
+        car;
+        background;
+
+        constructor() {
+            this.background = new Background("pink");
+            this.roadArray = [
+            new RoadSegment(250, 540, "white"),
+            new RoadSegment(250, 480, "red"),
+            new RoadSegment(250, 420, "white"),
+            new RoadSegment(250, 360, "red"),
+            new RoadSegment(250, 300, "white"),
+            new RoadSegment(250, 240, "red"),
+            new RoadSegment(250, 180, "white"),
+            new RoadSegment(250, 120, "red"),
+            new RoadSegment(250, 60, "white"),
+            new RoadSegment(250, 0, "red")
+            ];
+        }
+    }
+    game = new Race();
+
 
 
     // class Road{
