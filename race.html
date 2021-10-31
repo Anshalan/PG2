@@ -108,6 +108,10 @@
         getColor() {
             return this.curbColor;
         }
+
+        getX() {
+            return this.x;
+        }
     }
 
     class Curb {
@@ -148,15 +152,45 @@
         }
     }
 
+    class Car{
+        width;
+        height;
+        wheels;
+        x;
+        y;
+
+        constructor() {
+            this.height = 60;
+            this.width=40;
+            this.x = 380;
+            this.y = 530;
+            this.draw();
+
+        }
+        draw(){
+            ctx.fillStyle = "cyan";
+            ctx.fillRect(this.x,this.y,this.width, this.height);
+        }
+        // checkCollision(curbX,curbY){
+        //     if
+        //
+        // }
+
+    }
     class Race {
         roadArray;
         car;
         background;
-        moveCounter
+        moveCounter;
+        turnCounter;
+        turn;
 
         constructor() {
-            this.moveCounter=0
-            this.background = new Background("pink");
+            this.car = new Car();
+            this.moveCounter = 0;
+            this.turnCounter = 0;
+            this.turn = 0;
+            this.background = new Background("green");
             this.roadArray = [
                 new RoadSegment(250, 540, "white"),
                 new RoadSegment(250, 480, "red"),
@@ -175,31 +209,43 @@
 
         moveRoad() {
             this.moveCounter++;
+            this.turnCounter++;
+            if (this.turnCounter === 100) {
+                this.turnCounter = 0
+                this.turn = this.randRoadDirection();
+            }
             this.background.draw();
             this.roadArray.forEach(this.moveRoadElement);
-
-            if(this.moveCounter === 10){
+            this.car.draw();
+            if (this.moveCounter === 10) {
                 this.moveCounter = 0;
                 this.roadArray.shift();
-                this.roadArray.push(new RoadSegment(250 + this.randRoadDirection(), -60, this.roadArray[0].getColor()))
-
+                var newX = this.roadArray[9].getX() + this.turn;
+                if (newX < 20) {
+                    newX = 20;
+                }else if (newX > 440){
+                    newX = 440;
             }
-             }
-
-        randRoadDirection() {
-            let coin = Math.floor((Math.random() * 10) + 1);
-            if (coin < 4) {
-                return -5;
-            } else if (coin < 7) {
-                return +5;
-            } else {
-                return 0;
-            }
+            this.roadArray.push(new RoadSegment(newX, -60, this.roadArray[0].getColor()))
         }
+    }
 
-        moveRoadElement(item) {
-            item.move();
+    randRoadDirection()
+    {
+        let coin = Math.floor((Math.random() * 10) + 1);
+        if (coin < 4) {
+            return -5;
+        } else if (coin < 7) {
+            return 5;
+        } else {
+            return 0;
         }
+    }
+
+    moveRoadElement(item)
+    {
+        item.move();
+    }
 
     }
 
@@ -209,7 +255,7 @@
         game.moveRoad();
     }
 
-    window.setInterval(aaa, 15)
+    window.setInterval(aaa, 800)
 
     // game.moveRoad();
 
