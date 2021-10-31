@@ -22,6 +22,28 @@
     let keyboardEventListenerDown;
     let keyboardEventListenerUp;
 
+    class Obstacle {
+        x;
+        y;
+        width;
+        height;
+        color;
+
+        constructor(x, y) {
+            this.x = x + Math.floor((Math.random() * 10) + 1) * 23;
+            this.y = y;
+            this.height = 25;
+            this.width = 60;
+            this.color = "purple"
+            this.draw()
+        }
+
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x, this.y, this.width, this.height)
+        }
+
+    }
 
     class RoadSegment {
         x;
@@ -31,13 +53,17 @@
         curbColor;
         width;
         height;
+        obstacle;
 
-        constructor(X, Y, curbColor) {
+        constructor(X, Y, curbColor, obstacle) {
             this.x = X;
             this.y = Y;
             this.width = 300;
             this.height = 60; // change do less
             this.curbColor = curbColor;
+            if (obstacle > 9) {
+                this.obstacle = new Obstacle(this.x, this.y)
+            }
             this.draw()
         }
 
@@ -50,9 +76,15 @@
                 ctx.fillStyle = this.curbColor;
                 ctx.fillRect(this.x + 145, this.y, 10, this.height)
             }
+            if (this.obstacle) {
+                this.obstacle.draw();
+            }
         }
 
         move() {
+            if (this.obstacle) {
+                this.obstacle.y += 6;
+            }
             this.y = this.y + 6;
             this.draw();
         }
@@ -102,14 +134,15 @@
 
         }
     }
-    class Wheel{
+
+    class Wheel {
         x;
         y;
         height;
         width;
         color;
 
-        constructor(x,y) {
+        constructor(x, y) {
             this.x = x;
             this.y = y;
             this.height = 15;
@@ -117,9 +150,10 @@
             this.color = 'black';
             this.draw();
         }
-        draw(){
+
+        draw() {
             ctx.fillStyle = this.color;
-            ctx.fillRect(this.x,this.y,this.width,this.height)
+            ctx.fillRect(this.x, this.y, this.width, this.height)
         }
     }
 
@@ -144,10 +178,10 @@
             this.moveLeft = false;
             this.moveRight = false;
             this.wheels = [
-                new Wheel(this.x,this.y+3),
-                new Wheel(this.x,this.y+45),
-                new Wheel(this.x+32,this.y+3),
-                new Wheel(this.x+32,this.y+45)
+                new Wheel(this.x, this.y + 3),
+                new Wheel(this.x, this.y + 45),
+                new Wheel(this.x + 32, this.y + 3),
+                new Wheel(this.x + 32, this.y + 45)
             ];
 
 
@@ -160,7 +194,7 @@
         draw() {
             ctx.fillStyle = this.color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
-            for(let i = 0; i < this.wheels.length; i++){
+            for (let i = 0; i < this.wheels.length; i++) {
                 this.wheels[i].draw();
             }
         }
@@ -174,8 +208,8 @@
 
         changeX(value) {
             this.x += value;
-            for(let i = 0; i < this.wheels.length; i++){
-                this.wheels[i].x +=value;
+            for (let i = 0; i < this.wheels.length; i++) {
+                this.wheels[i].x += value;
             }
         }
 
@@ -188,6 +222,7 @@
             }
 
         }
+
         moveStop(key) {
             if (key.keyCode === 37) {
                 this.moveLeft = false;
@@ -200,6 +235,25 @@
         }
 
     }
+    class PointsCounter{
+        x;
+        y;
+        value;
+        color = "black";
+
+        constructor() {
+            this.x = 0;
+            this.y = 0;
+            this.value = 0;
+            ctx.font = "35px Arial";
+            this.draw()
+        }
+        draw(){
+            ctx.fillStyle = this.color;
+            ctx.textAlign = "center";
+            ctx.fillText(Math.floor(this.value/10), canvas.width-60, 50);
+        }
+    }
 
     class Race {
         roadArray;
@@ -208,6 +262,7 @@
         moveCounter;
         turnCounter;
         turn;
+        pointsCounter
 
 
         constructor() {
@@ -216,6 +271,7 @@
             this.turnCounter = 0;
             this.turn = 0;
             this.background = new Background("green");
+            this.pointsCounter = new PointsCounter();
             this.roadArray = [
                 new RoadSegment(250, 540, "white"),
                 new RoadSegment(250, 480, "red"),
@@ -252,12 +308,19 @@
             }
             this.car.draw();
             for (let j = 0; j < 3; j++) {
-                if (this.car.checkCollision(
-                    this.roadArray[j].leftCurb) || this.car.checkCollision(
-                    this.roadArray[j].rightCurb)) {
+                if (this.car.checkCollision(this.roadArray[j].leftCurb) ||
+                    this.car.checkCollision(this.roadArray[j].rightCurb))
+                        {
                     this.car.color = 'pink';
                     this.car.draw();
                     clearInterval(roadInterval)
+                }
+                if(this.roadArray[j].obstacle){
+                    if(this.car.checkCollision(this.roadArray[j].obstacle)){
+                        this.car.color = 'pink';
+                        this.car.draw();
+                        clearInterval(roadInterval)
+                    }
                 }
             }
             if (this.moveCounter === 10) {
@@ -266,11 +329,13 @@
                 var newX = this.roadArray[9].getX() + this.turn;
                 if (newX < 20) {
                     newX = 20;
-                } else if (newX > 440) {
-                    newX = 440;
+                } else if (newX > 400) {
+                    newX = 400;
                 }
-                this.roadArray.push(new RoadSegment(newX, -60, this.roadArray[0].getColor()))
+                this.roadArray.push(new RoadSegment(newX, -60, this.roadArray[0].getColor(), Math.floor((Math.random() * 10) + 1)))
             }
+            this.pointsCounter.value+= 1;
+            this.pointsCounter.draw();
         }
 
         randRoadDirection() {
@@ -303,7 +368,7 @@
         game.car.moveStop(e);
     }
 
-    roadInterval = window.setInterval(aaa, 15)
+    roadInterval = window.setInterval(aaa, 10)
 </script>
 
 </body>
